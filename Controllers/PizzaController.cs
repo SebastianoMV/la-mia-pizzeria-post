@@ -20,7 +20,9 @@ namespace la_mia_pizzeria_post.Controllers
 
         public IActionResult Details(int id)
         {
-            return View(Pizze()[id]);
+            Context db = new Context();
+            Pizza pizza = (Pizza)db.Pizza.Where(pizze=> pizze.Id == id).First();
+            return View(pizza);
         }
 
         public IActionResult Create()
@@ -36,9 +38,11 @@ namespace la_mia_pizzeria_post.Controllers
             {
                 return View("Create", pizza);
             }
-            Aggiungi(new Pizza(pizza.Nome, pizza.Descrizione, pizza.Image, pizza.Prezzo));
+            Aggiungi(pizza);
             return RedirectToAction("Index");
         }
+
+
 
         public IActionResult Privacy()
         {
@@ -54,7 +58,7 @@ namespace la_mia_pizzeria_post.Controllers
         public List<Pizza> Pizze()
         {
             Context db = new Context();
-            List<Pizza> pizze = db.Pizza.OrderBy(pizza => pizza.Id).ToList<Pizza>();
+            List<Pizza> pizze = db.Pizza.ToList<Pizza>();
             return pizze;
         }
 
